@@ -1,0 +1,33 @@
+{
+  "name": "coloruv",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A minimal natural color picker",
+  "homepage": "https://metaory.github.io/coloruv/",
+  "bugs": "https://github.com/metaory/coloruv/issues",
+  "repository": "git+https://github.com/metaory/coloruv.git",
+  "author": "metaory <metaory@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "color-picker",
+    "palette",
+    "design-tools",
+    "color-tools",
+    "interactive",
+    "minimal",
+    "vanilla-js"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "^5.2.8",
+    "@fontsource/libre-barcode-128-text": "^5.2.6"
+  }
+}
