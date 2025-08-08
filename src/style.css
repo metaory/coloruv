@@ -67,6 +67,7 @@ header {
   z-index: 100;
   transition: var(--transition-normal);
   mix-blend-mode: var(--blend-diff);
+  pointer-events: none;
 
   a {
     position: absolute;
@@ -78,6 +79,7 @@ header {
     color: var(--primary);
     transition: var(--transition-fast);
     opacity: 0.4;
+    pointer-events: auto;
 
     svg {
       width: 40px;
@@ -96,6 +98,7 @@ header {
     text-shadow: var(--shadow);
     opacity: 0.8;
     transition: var(--transition-fast);
+    pointer-events: auto;
 
     &:hover {
       transform: scale(1.1);

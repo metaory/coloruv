@@ -12,6 +12,8 @@
   <br>
     that transforms your screen into a living palette
   <br>
+  <hr>
+  <img valign="middle" src="public/screenshot.jpg" alt="logo" width="90%" />
   <br>
   🌐 <a href="https://metaory.github.io/coloruv">metaory.github.io/coloruv</a>
 </div>
