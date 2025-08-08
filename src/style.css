@@ -18,7 +18,7 @@
   --overlay-dark: rgba(10, 10, 10, 0.1);
 
   /* Effects */
-  --shadow: 0 0 2px currentColor;
+  --shadow: 0 0 4px currentColor;
   --blur: blur(10px);
   --box-shadow: 0 0 14px #0004;
   --glow-shadow: 0 0 16px 6px #22003344;
@@ -126,7 +126,7 @@ header {
   padding: 10px 20px;
   text-shadow: var(--shadow);
   border-radius: var(--radius-xl);
-  font-size: 1rem;
+  font-size: 1.2rem;
   pointer-events: none;
   mix-blend-mode: var(--blend-diff);
 }
@@ -179,7 +179,7 @@ header {
   background: var(--overlay);
   padding: 0.8rem 0.4rem;
   font-family: "Fredoka Variable", monospace;
-  font-size: 0.8rem;
+  font-size: 1rem;
   text-align: center;
   user-select: none;
   transition: background var(--transition-fast);

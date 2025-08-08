@@ -18,7 +18,22 @@ const el = (tag, props = {}, ...children) => {
 }
 
 const currentColor = () => `hsl(${state.hue}, ${state.saturation}%, ${state.lightness}%)`
-const currentValue = () => `hsl(${Math.round(state.hue)}, ${Math.round(state.saturation)}%, ${Math.round(state.lightness)}%)`
+const hslToHex = (h, s, l) => {
+  h = Math.round(h) % 360
+  s = Math.round(s) / 100
+  l = Math.round(l) / 100
+  const a = s * Math.min(l, 1 - l)
+  const f = n => {
+    const k = (n + h / 30) % 12
+    const c = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)))
+    return Math.round(255 * c)
+      .toString(16)
+      .padStart(2, '0')
+      .toUpperCase()
+  }
+  return `#${f(0)}${f(8)}${f(4)}`
+}
+const currentValue = () => hslToHex(state.hue, state.saturation, state.lightness)
 
 const addVersionBadge = () => {
   const v = (import.meta && import.meta.env && import.meta.env.VERSION) || ''
@@ -139,7 +154,7 @@ const updateLayout = () => {
       createActionButton(`<img src="${asset('copy.svg')}" alt="copy" />`, 'copy-btn', () => copyToClipboard(value)),
       createActionButton(`<img src="${asset('close.svg')}" alt="remove" />`, 'remove-btn', () => removeColor(i)),
     )
-    const column = el( 'div', { className: 'color-column', style: { backgroundColor: color } }, colorValue, actionButtons)
+    const column = el('div', { className: 'color-column', style: { backgroundColor: color } }, colorValue, actionButtons)
     body.insertBefore(column, activeArea)
   }
 
@@ -160,4 +175,3 @@ const hideSplash = () => document.documentElement.classList.add('loaded')
 
 const fontsReady = document?.fonts.ready ? document.fonts.ready : Promise.resolve()
 fontsReady.then(hideSplash).then(addVersionBadge)
-
