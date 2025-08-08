@@ -38,9 +38,9 @@
     <meta name="revisit-after" content="7 days">
 
     <style>
-      html,body{background:#220033;color:#eeaaff;margin:0;height:100%}
-      #splash{position:fixed;inset:0;display:grid;place-items:center;background:#220033;z-index:9999;opacity:1;transition:opacity .35s ease}
-      #splash img{width:80px;height:80px;filter:drop-shadow(0 0 16px #220033);animation:pop 1.2s ease-in-out infinite}
+      html,body{background:var(--background);color:var(--primary);margin:0;height:100%}
+      #splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--background);z-index:9999;opacity:1;transition:opacity .35s ease}
+      #splash img{width:80px;height:80px;filter:drop-shadow(0 0 16px var(--background));animation:pop 1.2s ease-in-out infinite}
       @keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
       .loaded #splash{opacity:0;pointer-events:none}
     </style>

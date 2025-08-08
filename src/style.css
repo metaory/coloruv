@@ -3,19 +3,45 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
-  color: #eeaaff;
-  background-color: #220033;
+  color: var(--primary);
+  background-color: var(--background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Colors */
+  --primary: #eeaaff;
+  --background: #220033;
+  --accent: #00ffff;
+  --overlay: rgba(30, 30, 30, 0.3);
+  --overlay-dark: rgba(10, 10, 10, 0.1);
+
+  /* Effects */
+  --shadow: 0 0 2px currentColor;
+  --blur: blur(10px);
+  --box-shadow: 0 0 14px #0004;
+  --glow-shadow: 0 0 16px 6px #22003344;
+
+  /* Border radius */
+  --radius-sm: 12px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+
+  /* Transitions */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+
+  /* Blend modes */
+  --blend-diff: difference;
+  --blend-excl: exclusion;
 }
 
 html {
   overflow: hidden;
   height: 100%;
   overscroll-behavior: none;
-  color-scheme: dark;
 }
 
 body {
@@ -37,10 +63,10 @@ header {
   justify-content: center;
   width: 100vw;
   font-family: "Libre Barcode 128 Text", monospace;
-  backdrop-filter: blur(10px);
+  backdrop-filter: var(--blur);
   z-index: 100;
-  transition: all 0.3s ease;
-  mix-blend-mode: difference;
+  transition: var(--transition-normal);
+  mix-blend-mode: var(--blend-diff);
 
   a {
     position: absolute;
@@ -49,14 +75,14 @@ header {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: #eeaaff;
-    transition: all 0.2s ease;
+    color: var(--primary);
+    transition: var(--transition-fast);
     opacity: 0.4;
 
     svg {
       width: 40px;
       height: 40px;
-      transition: all 0.3s ease;
+      transition: var(--transition-normal);
     }
 
     &:hover {
@@ -67,9 +93,9 @@ header {
 
   span {
     font-size: 2.8rem;
-    text-shadow: 0 0 8px currentColor;
+    text-shadow: var(--shadow);
     opacity: 0.8;
-    transition: all 0.2s ease;
+    transition: var(--transition-fast);
 
     &:hover {
       transform: scale(1.1);
@@ -86,23 +112,50 @@ header {
   justify-content: center;
   flex-direction: column;
   cursor: crosshair;
-  transition: width 0.3s ease;
+  transition: width var(--transition-normal);
   flex: 1;
   touch-action: none;
 }
 
 #color-display {
-  background: rgba(30, 30, 30, 0.3);
-  backdrop-filter: blur(10px);
+  background: var(--overlay);
+  backdrop-filter: var(--blur);
   padding: 10px 20px;
-  text-shadow: 0 0 6px currentColor;
-  border-radius: 20px;
+  text-shadow: var(--shadow);
+  border-radius: var(--radius-xl);
   font-size: 1rem;
   pointer-events: none;
-  mix-blend-mode: difference;
+  mix-blend-mode: var(--blend-diff);
 }
 
-/* save button removed */
+#contrast {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-radius: var(--radius-lg);
+  background: var(--overlay-dark);
+  backdrop-filter: var(--blur);
+  z-index: 50;
+  pointer-events: none;
+  width: max-content;
+  height: max-content;
+}
+
+#contrast .sample {
+  padding: 10px;
+  display: grid;
+  place-items: center;
+  width: max-content;
+  font-weight: 800;
+  font-size: 18px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--box-shadow);
+  white-space: nowrap;
+}
 
 .color-column {
   width: 8vw;
@@ -120,16 +173,16 @@ header {
 .color-value {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  background: rgba(30, 30, 30, 0.3);
+  background: var(--overlay);
   padding: 0.8rem 0.4rem;
   font-family: "Fredoka Variable", monospace;
   font-size: 0.8rem;
   text-align: center;
   user-select: none;
-  transition: background 0.2s ease;
-  text-shadow: 0 0 8px currentColor;
-  box-shadow: 0 0 16px 6px #22003344;
-  border-radius: 14px;
+  transition: background var(--transition-fast);
+  text-shadow: var(--shadow);
+  box-shadow: var(--glow-shadow);
+  border-radius: var(--radius-md);
   height: max-content;
   display: flex;
   align-items: center;
@@ -137,7 +190,7 @@ header {
   cursor: pointer;
   border: none;
   color: inherit;
-  mix-blend-mode: difference;
+  mix-blend-mode: var(--blend-diff);
 }
 
 .action-buttons {
@@ -155,9 +208,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  color: #eeaaff;
-  mix-blend-mode: difference;
+  transition: var(--transition-fast);
+  color: var(--primary);
+  mix-blend-mode: var(--blend-diff);
 
   img {
     width: 1.5rem;
@@ -169,29 +222,25 @@ header {
   }
 
   &:hover {
-    color: #00ffff;
+    color: var(--accent);
     transform: scale(1.1);
   }
-}
-
-.action-btn:hover {
-  color: cyan;
 }
 
 .toast {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: rgba(30, 30, 30, 0.3);
-  backdrop-filter: blur(10px);
-  text-shadow: 0 0 8px currentColor;
+  background: var(--overlay);
+  backdrop-filter: var(--blur);
+  text-shadow: var(--shadow);
   padding: 0.75rem 1.5rem;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   font-size: 0.9rem;
   font-weight: bold;
   z-index: 1000;
-  animation: slideIn 0.3s ease;
-  mix-blend-mode: exclusion;
+  animation: slideIn var(--transition-normal);
+  mix-blend-mode: var(--blend-excl);
 }
 
 @keyframes slideIn {
@@ -211,10 +260,11 @@ header {
   bottom: 1rem;
   font-size: 10px;
   opacity: 0.6;
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  text-shadow: 0 0 8px currentColor;
-  mix-blend-mode: difference;
+  color: white;
+  backdrop-filter: var(--blur);
+  border-radius: var(--radius-sm);
+  text-shadow: var(--shadow);
+  mix-blend-mode: var(--blend-diff);
   pointer-events: none;
   user-select: none;
   touch-action: none;

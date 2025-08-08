@@ -4,9 +4,9 @@ import '@fontsource/libre-barcode-128-text'
 
 const body = document.body
 
-const state = { hue: 260, saturation: 60, lightness: 30, selectedColors: [] }
+const state = { hue: 260, saturation: 60, lightness: 30, selectedColors: [], contrast: null }
 const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) || '/'
-const asset = (name) => `${base}${name}`
+const asset = name => `${base}${name}`
 
 const el = (tag, props = {}, ...children) => {
   const { style, dataset, ...rest } = props
@@ -35,10 +35,11 @@ const createLayout = () => {
   return { activeArea, colorDisplay }
 }
 
-const updateColor = (activeArea) => {
+const updateColor = activeArea => {
   activeArea.style.backgroundColor = currentColor()
   const colorDisplay = activeArea.querySelector('#color-display')
   colorDisplay.textContent = currentValue()
+  if (state.contrast) updateContrast(state.contrast)
 }
 
 const handlePointer = (e, activeArea) => {
@@ -46,13 +47,42 @@ const handlePointer = (e, activeArea) => {
   const x = (e.clientX - rect.left) / rect.width
   const y = (e.clientY - rect.top) / rect.height
   state.hue = x * 360
-  state.saturation = 100 - (y * 100)
+  state.saturation = 100 - y * 100
   state.lightness = y * 100
   updateColor(activeArea)
 }
 
-const legacyCopy = (text) => {
-  const ta = el('textarea', { value: text, readOnly: true, style: { position: 'fixed', top: '-1000px', opacity: '0' } })
+const createContrast = () => {
+  const word = 'coloruv'
+  const node = el('div', { id: 'contrast' })
+  node.append(
+    el('div', { className: 'sample', textContent: word, style: { background: '#fff' } }),
+    el('div', { className: 'sample', textContent: word, style: { background: '#000' } }),
+    el('div', { className: 'sample', textContent: word }),
+    el('div', { className: 'sample', textContent: word }),
+  )
+  body.appendChild(node)
+  state.contrast = node
+  return node
+}
+
+const updateContrast = node => {
+  const c = currentColor()
+  const [onWhite, onBlack, whiteOnActive, blackOnActive] = node.children
+  onWhite.style.color = c
+  onBlack.style.color = c
+  whiteOnActive.style.background = c
+  whiteOnActive.style.color = '#fff'
+  blackOnActive.style.background = c
+  blackOnActive.style.color = '#000'
+}
+
+const legacyCopy = text => {
+  const ta = el('textarea', {
+    value: text,
+    readOnly: true,
+    style: { position: 'fixed', top: '-1000px', opacity: '0' },
+  })
   body.appendChild(ta)
   ta.select()
   const ok = document?.execCommand('copy')
@@ -61,13 +91,17 @@ const legacyCopy = (text) => {
   return Promise.resolve(ok)
 }
 
-const copyToClipboard = (text) => {
+const copyToClipboard = text => {
   const api = navigator?.clipboard?.writeText
-  if (api) return navigator.clipboard.writeText(text).then(() => showToast('Color copied!'), () => legacyCopy(text))
+  if (api)
+    return navigator.clipboard.writeText(text).then(
+      () => showToast('Color copied!'),
+      () => legacyCopy(text),
+    )
   return legacyCopy(text)
 }
 
-const showToast = (message) => {
+const showToast = message => {
   const toast = el('div', { className: 'toast', textContent: message })
   body.appendChild(toast)
   setTimeout(() => toast.remove(), 2_000)
@@ -81,35 +115,43 @@ const saveColor = () => {
   updateLayout()
 }
 
-const removeColor = (index) => {
+const removeColor = index => {
   state.selectedColors.splice(index, 1)
   updateLayout()
 }
 
-const createActionButton = (html, className, onClick) => el('button', { className: `action-btn ${className}`, innerHTML: html, onclick: onClick })
+const createActionButton = (html, className, onClick) =>
+  el('button', { className: `action-btn ${className}`, innerHTML: html, onclick: onClick })
 
 const updateLayout = () => {
   const existing = document.querySelectorAll('.color-column')
   for (const col of existing) col.remove()
 
   for (const [i, { color, value }] of state.selectedColors.entries()) {
-    const colorValue = el('button', { className: 'color-value', textContent: value, onclick: () => copyToClipboard(value) })
-    const actionButtons = el('div', { className: 'action-buttons' },
+    const colorValue = el('button', {
+      className: 'color-value',
+      textContent: value,
+      onclick: () => copyToClipboard(value),
+    })
+    const actionButtons = el(
+      'div',
+      { className: 'action-buttons' },
       createActionButton(`<img src="${asset('copy.svg')}" alt="copy" />`, 'copy-btn', () => copyToClipboard(value)),
       createActionButton(`<img src="${asset('close.svg')}" alt="remove" />`, 'remove-btn', () => removeColor(i)),
     )
-    const column = el('div', { className: 'color-column', style: { backgroundColor: color } }, colorValue, actionButtons)
+    const column = el( 'div', { className: 'color-column', style: { backgroundColor: color } }, colorValue, actionButtons)
     body.insertBefore(column, activeArea)
   }
 
   const total = state.selectedColors.length
-  const activeWidth = Math.max(25, 100 - (total * 12))
+  const activeWidth = Math.max(25, 100 - total * 12)
   activeArea.style.width = `${activeWidth}%`
 }
 
 const { activeArea } = createLayout()
-activeArea.addEventListener('pointerenter', (e) => handlePointer(e, activeArea))
-activeArea.addEventListener('pointermove', (e) => handlePointer(e, activeArea))
+createContrast()
+activeArea.addEventListener('pointerenter', e => handlePointer(e, activeArea))
+activeArea.addEventListener('pointermove', e => handlePointer(e, activeArea))
 activeArea.addEventListener('click', saveColor)
 
 updateColor(activeArea)
@@ -117,6 +159,5 @@ updateColor(activeArea)
 const hideSplash = () => document.documentElement.classList.add('loaded')
 
 const fontsReady = document?.fonts.ready ? document.fonts.ready : Promise.resolve()
-fontsReady
-  .then(hideSplash)
-  .then(addVersionBadge)
+fontsReady.then(hideSplash).then(addVersionBadge)
+
