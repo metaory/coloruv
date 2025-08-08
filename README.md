@@ -13,7 +13,7 @@
     that transforms your screen into a living palette
   <br>
   <br>
-  🌐 <a href="http://metaory.github.io/coloruv">metaory.github.io/coloruv</a>
+  🌐 <a href="https://metaory.github.io/coloruv">metaory.github.io/coloruv</a>
 </div>
 
 ---
@@ -23,8 +23,6 @@
 - **Horizontal movement** → hue
 - **Vertical movement** → saturation/brightness
 - **Click** → save to palette
-- **Click values** → copy to clipboard
-- **× button** → remove colors
 
 Active area shrinks as palette grows for focused workspace
 

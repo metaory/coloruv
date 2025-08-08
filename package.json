@@ -1,7 +1,7 @@
 {
   "name": "coloruv",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A minimal natural color picker",
   "homepage": "https://metaory.github.io/coloruv/",
   "bugs": "https://github.com/metaory/coloruv/issues",

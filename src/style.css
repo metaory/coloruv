@@ -10,6 +10,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  overflow: hidden;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -17,6 +23,7 @@ body {
   overflow: hidden;
   display: flex;
   user-select: none;
+  overscroll-behavior: none;
 }
 
 header {
@@ -42,50 +49,62 @@ header {
     border-radius: 50%;
     color: #eeaaff;
     transition: all 0.2s ease;
+    opacity: 0.4;
 
     svg {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       transition: all 0.3s ease;
     }
 
     &:hover {
-      color: #00ffff;
       transform: scale(1.2) rotate(6deg);
+      opacity: 0.6;
     }
   }
 
   span {
     font-size: 2.8rem;
     text-shadow: 0 0 8px currentColor;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 1;
+    }
   }
 }
 
 #active-area {
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   cursor: crosshair;
   transition: width 0.3s ease;
   flex: 1;
+  touch-action: none;
 }
 
 #color-display {
-  background: #22003344;
+  background: rgba(30, 30, 30, 0.3);
   backdrop-filter: blur(10px);
   padding: 10px 20px;
-  text-shadow: 0 0 8px currentColor;
-  box-shadow: 0 0 16px 6px #22003344;
+  text-shadow: 0 0 6px currentColor;
   border-radius: 20px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   pointer-events: none;
+  mix-blend-mode: difference;
 }
 
+/* save button removed */
+
 .color-column {
-  width: 12vw;
-  height: 100vh;
+  width: 8vw;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -99,18 +118,24 @@ header {
 .color-value {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1rem 0.5rem;
-  border-radius: 20px;
+  background: rgba(30, 30, 30, 0.3);
+  padding: 0.8rem 0.4rem;
+  font-family: "Fredoka Variable", monospace;
   font-size: 0.8rem;
-  font-weight: bold;
   text-align: center;
   user-select: none;
   transition: background 0.2s ease;
+  text-shadow: 0 0 8px currentColor;
+  box-shadow: 0 0 16px 6px #22003344;
+  border-radius: 14px;
   height: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  border: none;
+  color: inherit;
+  mix-blend-mode: difference;
 }
 
 .action-buttons {
@@ -121,11 +146,9 @@ header {
 }
 
 .action-btn {
-  background: transparent;
+  background: none;
   border: none;
   border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -134,10 +157,13 @@ header {
   color: #eeaaff;
   mix-blend-mode: difference;
 
-  svg {
-    width: 36px;
-    height: 36px;
-    transition: all 0.2s ease;
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
   }
 
   &:hover {
@@ -154,16 +180,16 @@ header {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #22003344;
+  background: rgba(30, 30, 30, 0.3);
   backdrop-filter: blur(10px);
   text-shadow: 0 0 8px currentColor;
-  box-shadow: 0 0 16px 6px #22003344;
   padding: 0.75rem 1.5rem;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: bold;
   z-index: 1000;
   animation: slideIn 0.3s ease;
+  mix-blend-mode: exclusion;
 }
 
 @keyframes slideIn {
@@ -175,4 +201,19 @@ header {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+#version {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  font-size: 10px;
+  opacity: 0.6;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  text-shadow: 0 0 8px currentColor;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  user-select: none;
+  touch-action: none;
 }
