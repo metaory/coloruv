@@ -2,6 +2,7 @@
   font-family: "Fredoka Variable", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color-scheme: dark;
   color: #eeaaff;
   background-color: #220033;
   font-synthesis: none;
@@ -14,6 +15,7 @@ html {
   overflow: hidden;
   height: 100%;
   overscroll-behavior: none;
+  color-scheme: dark;
 }
 
 body {
