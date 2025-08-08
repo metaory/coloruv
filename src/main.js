@@ -8,33 +8,37 @@ const state = { hue: 260, saturation: 60, lightness: 30, selectedColors: [] }
 const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) || '/'
 const asset = (name) => `${base}${name}`
 
+const el = (tag, props = {}, ...children) => {
+  const { style, dataset, ...rest } = props
+  const node = Object.assign(document.createElement(tag), rest)
+  if (style) Object.assign(node.style, style)
+  if (dataset) Object.assign(node.dataset, dataset)
+  for (const child of children) node.append(child)
+  return node
+}
+
+const currentColor = () => `hsl(${state.hue}, ${state.saturation}%, ${state.lightness}%)`
+const currentValue = () => `hsl(${Math.round(state.hue)}, ${Math.round(state.saturation)}%, ${Math.round(state.lightness)}%)`
+
 const addVersionBadge = () => {
   const v = (import.meta && import.meta.env && import.meta.env.VERSION) || ''
   if (!v) return
-  const el = document.createElement('div')
-  el.id = 'version'
-  el.textContent = `v${v}`
-  el.setAttribute('aria-hidden', 'true')
-  body.appendChild(el)
+  const node = el('div', { id: 'version', textContent: `v${v}` })
+  node.setAttribute('aria-hidden', 'true')
+  body.appendChild(node)
 }
 
 const createLayout = () => {
-  const activeArea = document.createElement('div')
-  activeArea.id = 'active-area'
-  const colorDisplay = document.createElement('div')
-  colorDisplay.id = 'color-display'
-  colorDisplay.textContent = 'Tap or click to save color'
-  activeArea.appendChild(colorDisplay)
+  const colorDisplay = el('div', { id: 'color-display', textContent: 'Tap or click to save color' })
+  const activeArea = el('div', { id: 'active-area' }, colorDisplay)
   body.appendChild(activeArea)
   return { activeArea, colorDisplay }
 }
 
 const updateColor = (activeArea) => {
-  const { hue, saturation, lightness } = state
-  const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`
-  activeArea.style.backgroundColor = color
+  activeArea.style.backgroundColor = currentColor()
   const colorDisplay = activeArea.querySelector('#color-display')
-  colorDisplay.textContent = `hsl(${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%)`
+  colorDisplay.textContent = currentValue()
 }
 
 const handlePointer = (e, activeArea) => {
@@ -48,13 +52,8 @@ const handlePointer = (e, activeArea) => {
 }
 
 const legacyCopy = (text) => {
-  const ta = document.createElement('textarea')
-  ta.value = text
-  ta.setAttribute('readonly', '')
-  ta.style.position = 'fixed'
-  ta.style.top = '-1000px'
-  ta.style.opacity = '0'
-  document.body.appendChild(ta)
+  const ta = el('textarea', { value: text, readOnly: true, style: { position: 'fixed', top: '-1000px', opacity: '0' } })
+  body.appendChild(ta)
   ta.select()
   const ok = document?.execCommand('copy')
   ta.remove()
@@ -69,16 +68,14 @@ const copyToClipboard = (text) => {
 }
 
 const showToast = (message) => {
-  const toast = document.createElement('div')
-  toast.className = 'toast'
-  toast.textContent = message
+  const toast = el('div', { className: 'toast', textContent: message })
   body.appendChild(toast)
   setTimeout(() => toast.remove(), 2_000)
 }
 
 const saveColor = () => {
-  const color = `hsl(${state.hue}, ${state.saturation}%, ${state.lightness}%)`
-  const value = `hsl(${Math.round(state.hue)}, ${Math.round(state.saturation)}%, ${Math.round(state.lightness)}%)`
+  const color = currentColor()
+  const value = currentValue()
   state.selectedColors.push({ color, value })
   copyToClipboard(value)
   updateLayout()
@@ -89,38 +86,19 @@ const removeColor = (index) => {
   updateLayout()
 }
 
-const createActionButton = (html, className, onClick) => {
-  const btn = document.createElement('button')
-  btn.className = `action-btn ${className}`
-  btn.innerHTML = html
-  btn.onclick = onClick
-  return btn
-}
+const createActionButton = (html, className, onClick) => el('button', { className: `action-btn ${className}`, innerHTML: html, onclick: onClick })
 
 const updateLayout = () => {
   const existing = document.querySelectorAll('.color-column')
   for (const col of existing) col.remove()
 
   for (const [i, { color, value }] of state.selectedColors.entries()) {
-    const column = document.createElement('div')
-    column.className = 'color-column'
-    column.style.backgroundColor = color
-
-    const colorValue = document.createElement('button')
-    colorValue.className = 'color-value'
-    colorValue.textContent = value
-    colorValue.onclick = () => copyToClipboard(value)
-
-    const actionButtons = document.createElement('div')
-    actionButtons.className = 'action-buttons'
-
-    const copyBtn = createActionButton(`<img src="${asset('copy.svg')}" alt="copy" />`, 'copy-btn', () => copyToClipboard(value))
-    const removeBtn = createActionButton(`<img src="${asset('close.svg')}" alt="remove" />`, 'remove-btn', () => removeColor(i))
-
-    actionButtons.appendChild(copyBtn)
-    actionButtons.appendChild(removeBtn)
-    column.appendChild(colorValue)
-    column.appendChild(actionButtons)
+    const colorValue = el('button', { className: 'color-value', textContent: value, onclick: () => copyToClipboard(value) })
+    const actionButtons = el('div', { className: 'action-buttons' },
+      createActionButton(`<img src="${asset('copy.svg')}" alt="copy" />`, 'copy-btn', () => copyToClipboard(value)),
+      createActionButton(`<img src="${asset('close.svg')}" alt="remove" />`, 'remove-btn', () => removeColor(i)),
+    )
+    const column = el('div', { className: 'color-column', style: { backgroundColor: color } }, colorValue, actionButtons)
     body.insertBefore(column, activeArea)
   }
 
