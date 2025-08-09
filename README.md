@@ -15,7 +15,13 @@
   <hr>
   <img valign="middle" src="public/screenshot.jpg" alt="logo" width="90%" />
   <br>
+  <h3>
   🌐 <a href="https://metaory.github.io/coloruv">metaory.github.io/coloruv</a>
+  </h3>
+  <br>
+  <a href="https://www.producthunt.com/products/coloruv?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-coloruv" target="_blank">
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1003276&theme=light&t=1754732276354" alt="coloruv - A&#0032;minimal&#0032;natural&#0032;color&#0032;picker | Product Hunt" style="width: 200px; height: 50px;" width="200" height="50" />
+  </a>
 </div>
 
 ---
